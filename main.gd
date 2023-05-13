@@ -5,13 +5,13 @@ extends Node2D
 signal attack(data: Dictionary)
 
 
-# 攻击顺序优先级
+# attack priority 攻击顺序优先级
 enum {
-	READY,
-	BEFORE,
-	EXECUTE,
-	AFTER,
-	FINISH,
+	READY = -2,
+	BEFORE = -1,
+	EXECUTE = 0,
+	AFTER = 1,
+	FINISH = 2,
 }
 
 
@@ -20,25 +20,23 @@ enum {
 
 func _ready():
 	
-	# 默认执行功能动作
 	listener.listen(self.attack, func(data: Dictionary):
-		print("发出攻击，攻击数据：", data)
+		prints("ready attack:", data)
 		data['default'] = true
 	, EXECUTE)
 	
-	# 这个优先级的值只要是小于0的整数，即可比默认连接的执行顺序要靠前
 	listener.listen(self.attack, func(data: Dictionary):
-		print("准备执行攻击")
+		prints("attacking:", data)
 		data['before'] = true
-	, READY) # -1 优先级
+	, READY)
 	
 	listener.listen(self.attack, func(data: Dictionary):
-		print("攻击完成")
+		prints("attacked:", data)
 		data['after'] = true
 	, AFTER)
 	
 	listener.listen(self.attack, func(data: Dictionary):
-		print(data)
+		prints("finished:", data)
 	, FINISH)
 	
 	
@@ -49,7 +47,7 @@ func _ready():
 	# 打断执行攻击
 	listener.listen(self.attack, func(data: Dictionary):
 		if not enabled_attack[0]:
-			print("打断执行攻击")
+			print("interrupt attack")
 			listener.prevent_signal(self.attack)
 	, BEFORE)
 	
