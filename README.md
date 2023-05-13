@@ -1,3 +1,12 @@
+[![Godot Engine 4.0.0](https://img.shields.io/badge/Godot%20Engine-4.0.0-blue)](https://godotengine.org/)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://lbesson.mit-license.org/)
+
+
+
+---
+
+
+
 Give signals priority and make them scalable at will. 
 
 让信号具有优先级，信号变得像脚本一样具有扩展性
