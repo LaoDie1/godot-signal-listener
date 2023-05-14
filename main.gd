@@ -23,12 +23,12 @@ func _ready():
 	listener.listen(self.attack, func(data: Dictionary):
 		prints("ready attack:", data)
 		data['default'] = true
-	, EXECUTE)
+	, READY)
 	
 	listener.listen(self.attack, func(data: Dictionary):
 		prints("attacking:", data)
 		data['before'] = true
-	, READY)
+	, EXECUTE)
 	
 	listener.listen(self.attack, func(data: Dictionary):
 		prints("attacked:", data)
