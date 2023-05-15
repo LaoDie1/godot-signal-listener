@@ -22,12 +22,12 @@ func _ready():
 	
 	listener.listen(self.attack, func(data: Dictionary):
 		prints("ready attack:", data)
-		data['default'] = true
+		data['ready'] = true
 	, READY)
 	
 	listener.listen(self.attack, func(data: Dictionary):
 		prints("attacking:", data)
-		data['before'] = true
+		data['default'] = true
 	, EXECUTE)
 	
 	listener.listen(self.attack, func(data: Dictionary):
@@ -49,6 +49,12 @@ func _ready():
 		if not enabled_attack[0]:
 			print("interrupt attack")
 			listener.prevent_signal(self.attack)
+			
+			print("====================================")
+			# 打断后再次调用
+			enabled_attack[0] = true
+			self.attack.emit({})
+			
 	, BEFORE)
 	
 	

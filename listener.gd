@@ -38,27 +38,41 @@ var _signal_to_priority : Dictionary = {}
 #============================================================
 #  信号优先级执行
 #============================================================
+class PreventStatus:
+	
+	var status : bool = false
+	
+
+
 class SignalPriority:
+	## 已打断信号的执行
 	signal prevented
 	
+	# 当前执行的唯一ID（自增的）
+	var _execution_id : Array = [0]
 	# 优先级对应的回调列表
 	var _priority_to_callable : Dictionary = {}
 	# 优先级值列表
 	var _prioritys : Array[int] = []
-	# 打断
-	var _prevent : bool = false
+	# 是否打断状态
+	var _prevent_status : Dictionary = {}
 	
 	func _init(_signal: Signal):
 		_SignalUtil.connect_array_arg_callable(_signal, func(params: Array):
-			var list : Array[Callable] = []
+			# 使用唯一ID判断打断状态，防止在回调方法里打断后再次调用这个信号
+			_execution_id[0] += 1
+			var id : int = _execution_id[0]
+			_prevent_status[id] = false
+			# 开始执行
+			var list : Array[Callable]
 			for priority in _prioritys:
 				list = _priority_to_callable[priority]
 				for method in list:
-					if _prevent:
-						_prevent = false
+					if _prevent_status[id]:
 						self.prevented.emit()
 						return
 					method.callv(params)
+			_prevent_status.erase(id)
 		)
 	
 	## 添加这个优先级的 [Callable]。返回移除这个 [Callable] 的回调
@@ -72,7 +86,9 @@ class SignalPriority:
 	
 	## 打断执行
 	func prevent() -> void:
-		_prevent = true
+		# 打断信号当前执行ID
+		_prevent_status[_execution_id[0]] = true
+		
 
 
 
