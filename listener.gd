@@ -38,12 +38,6 @@ var _signal_to_priority : Dictionary = {}
 #============================================================
 #  信号优先级执行
 #============================================================
-class PreventStatus:
-	
-	var status : bool = false
-	
-
-
 class SignalPriority:
 	## 已打断信号的执行
 	signal prevented
@@ -86,7 +80,7 @@ class SignalPriority:
 	
 	## 打断执行
 	func prevent() -> void:
-		# 打断信号当前执行ID
+		# 打断当前信号的执行ID
 		_prevent_status[_execution_id[0]] = true
 		
 
